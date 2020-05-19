@@ -5,6 +5,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,13 +30,13 @@ public class DerivedTableStructure{
      * @return
      * @throws IOException
      */
-    public static HSSFWorkbook getWorkbok(File file) throws IOException{
-        HSSFWorkbook wb = null;
+    public static Workbook getWorkbok(File file) throws IOException{
+        Workbook wb = null;
         FileInputStream in = new FileInputStream(file);
         if(file.getName().endsWith(EXCEL_XLS)){     //Excel&nbsp;2003
             wb = new HSSFWorkbook(in);
         }else if(file.getName().endsWith(EXCEL_XLSX)){    // Excel 2007/2010
-            wb = new HSSFWorkbook(in);
+            wb = new XSSFWorkbook(in);
         }
         return wb;
     }
@@ -52,7 +54,7 @@ public class DerivedTableStructure{
             int columnNumCount = cloumnCount;
             // 读取Excel文档
             File finalXlsxFile = new File(finalXlsxPath);
-            org.apache.poi.ss.usermodel.Workbook workBook = (org.apache.poi.ss.usermodel.Workbook) getWorkbok(finalXlsxFile);
+            Workbook workBook = getWorkbok(finalXlsxFile);
             // sheet 对应一个工作页
             Sheet sheet = workBook.getSheetAt(0);
             /**
@@ -109,6 +111,9 @@ public class DerivedTableStructure{
         System.out.println("数据导出成功");
     }
 
+    /**
+     * 导出数据库表结构测试方法
+     */
     @Test
     public void exportTable(){
         List<Map<String,String>> tables = citysDAO.getTables();
@@ -133,7 +138,7 @@ public class DerivedTableStructure{
 
         }
 
-        writeExcel(excelList, ((List)excelList.get(0)).size(), "C:\\Users\\Administrator\\Desktop\\测试数据字段列表.xls");
+        writeExcel(excelList, ((List)excelList.get(0)).size(), "C:\\Users\\Administrator\\Desktop\\测试数据字段列表.xlsx");
     }
 
     private List getHeads(){
